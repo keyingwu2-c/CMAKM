@@ -1,0 +1,46 @@
+create table Expert(
+ExName varchar(15),
+RCount int,
+ACount int,
+constraint Expert_PK primary key(ExName),
+);
+
+create table Enquiry(
+EID varchar(40),
+Text text,
+ExName varchar(15),
+DID varchar(15),
+Time datetime
+constraint Enquiry_PK primary key(EID),
+constraint Enquiry_FK1 foreign key(ExName) references Expert(ExName));
+
+create table Division(
+DID varchar(15),
+DName varchar(40),
+EID varchar(40),
+constraint Division_PK primary key(DID),
+constraint Division_FK foreign key(EID) references Enquiry(EID),
+);
+
+alter table Enquiry
+add constraint fk_DID
+foreign key(DID) references Division(DID)
+ 
+create table DExMatch(
+DID varchar(15),
+ExName varchar(15),
+Level real,
+constraint DExMatch_FK1 foreign key(DID) references Division(DID),
+constraint DExMatch_FK2 foreign key(ExName) references Expert(ExName),
+); 
+
+create table Customer(
+CID varchar(20),
+EID varchar(40),
+CName varchar(20),
+DID varchar(15),
+constraint Customer_FK1 foreign key(EID) references Enquiry(EID),
+constraint Customer_FK2 foreign key(DID) references Division(DID),
+); 
+
+

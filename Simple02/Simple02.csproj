@@ -44,13 +44,50 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.1.0\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.1.0\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.1.0\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.Web, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.1.0\lib\net45\Microsoft.AI.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.WindowsServer, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.1.0\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.1.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -167,31 +204,338 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Common_Code\NTAuth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\EnquirerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ManagementController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611160135273_initial.cs" />
+    <Compile Include="Migrations\201611160135273_initial.Designer.cs">
+      <DependentUpon>201611160135273_initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611160215412_testpath.cs" />
+    <Compile Include="Migrations\201611160215412_testpath.Designer.cs">
+      <DependentUpon>201611160215412_testpath.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611160222485_testfilerecreation.cs" />
+    <Compile Include="Migrations\201611160222485_testfilerecreation.Designer.cs">
+      <DependentUpon>201611160222485_testfilerecreation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611160937475_changeUserConstriants.cs" />
+    <Compile Include="Migrations\201611160937475_changeUserConstriants.Designer.cs">
+      <DependentUpon>201611160937475_changeUserConstriants.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611170227057_changeUserDiscriminatorDefault.cs" />
+    <Compile Include="Migrations\201611170227057_changeUserDiscriminatorDefault.Designer.cs">
+      <DependentUpon>201611170227057_changeUserDiscriminatorDefault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611240717237_EnquiryRelatedTables.cs" />
+    <Compile Include="Migrations\201611240717237_EnquiryRelatedTables.Designer.cs">
+      <DependentUpon>201611240717237_EnquiryRelatedTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611240730508_CustomerRelaCorrct.cs" />
+    <Compile Include="Migrations\201611240730508_CustomerRelaCorrct.Designer.cs">
+      <DependentUpon>201611240730508_CustomerRelaCorrct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611240828100_changesunremember.cs" />
+    <Compile Include="Migrations\201611240828100_changesunremember.Designer.cs">
+      <DependentUpon>201611240828100_changesunremember.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611280244579_autoidforEnquiry.cs" />
+    <Compile Include="Migrations\201611280244579_autoidforEnquiry.Designer.cs">
+      <DependentUpon>201611280244579_autoidforEnquiry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611290254103_EnquirYs.cs" />
+    <Compile Include="Migrations\201611290254103_EnquirYs.Designer.cs">
+      <DependentUpon>201611290254103_EnquirYs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611290308268_deleteEnqPos.cs" />
+    <Compile Include="Migrations\201611290308268_deleteEnqPos.Designer.cs">
+      <DependentUpon>201611290308268_deleteEnqPos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612010807258_subclasses.cs" />
+    <Compile Include="Migrations\201612010807258_subclasses.Designer.cs">
+      <DependentUpon>201612010807258_subclasses.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612010828484_nullabledatetime.cs" />
+    <Compile Include="Migrations\201612010828484_nullabledatetime.Designer.cs">
+      <DependentUpon>201612010828484_nullabledatetime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612050351130_DateTimeGenerationChange.cs" />
+    <Compile Include="Migrations\201612050351130_DateTimeGenerationChange.Designer.cs">
+      <DependentUpon>201612050351130_DateTimeGenerationChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612050409273_DateTimeGenerationChangeBack.cs" />
+    <Compile Include="Migrations\201612050409273_DateTimeGenerationChangeBack.Designer.cs">
+      <DependentUpon>201612050409273_DateTimeGenerationChangeBack.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612050425564_RemoveComputedAnnotation.cs" />
+    <Compile Include="Migrations\201612050425564_RemoveComputedAnnotation.Designer.cs">
+      <DependentUpon>201612050425564_RemoveComputedAnnotation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612050630144_EnquiryAssignment.cs" />
+    <Compile Include="Migrations\201612050630144_EnquiryAssignment.Designer.cs">
+      <DependentUpon>201612050630144_EnquiryAssignment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612050819376_KeepConnectionByPosts.cs" />
+    <Compile Include="Migrations\201612050819376_KeepConnectionByPosts.Designer.cs">
+      <DependentUpon>201612050819376_KeepConnectionByPosts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612050845117_addattronpost.cs" />
+    <Compile Include="Migrations\201612050845117_addattronpost.Designer.cs">
+      <DependentUpon>201612050845117_addattronpost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612050853077_readytodiscn.cs" />
+    <Compile Include="Migrations\201612050853077_readytodiscn.Designer.cs">
+      <DependentUpon>201612050853077_readytodiscn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612060349198_ChangeAttributePlace.cs" />
+    <Compile Include="Migrations\201612060349198_ChangeAttributePlace.Designer.cs">
+      <DependentUpon>201612060349198_ChangeAttributePlace.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612070354471_posterdisplay.cs" />
+    <Compile Include="Migrations\201612070354471_posterdisplay.Designer.cs">
+      <DependentUpon>201612070354471_posterdisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612070427051_votescounted.cs" />
+    <Compile Include="Migrations\201612070427051_votescounted.Designer.cs">
+      <DependentUpon>201612070427051_votescounted.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612070635487_IsConsolidation.cs" />
+    <Compile Include="Migrations\201612070635487_IsConsolidation.Designer.cs">
+      <DependentUpon>201612070635487_IsConsolidation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612140317130_ChangeFildsInEnquiry.cs" />
+    <Compile Include="Migrations\201612140317130_ChangeFildsInEnquiry.Designer.cs">
+      <DependentUpon>201612140317130_ChangeFildsInEnquiry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612190323086_ChangeFiestoFileChangeTextRemarktoQdetail.cs" />
+    <Compile Include="Migrations\201612190323086_ChangeFiestoFileChangeTextRemarktoQdetail.Designer.cs">
+      <DependentUpon>201612190323086_ChangeFiestoFileChangeTextRemarktoQdetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612190849376_AddAttributestoEqry.cs" />
+    <Compile Include="Migrations\201612190849376_AddAttributestoEqry.Designer.cs">
+      <DependentUpon>201612190849376_AddAttributestoEqry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612200446049_AddTopicTable.cs" />
+    <Compile Include="Migrations\201612200446049_AddTopicTable.Designer.cs">
+      <DependentUpon>201612200446049_AddTopicTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612200556329_AddProudctServiceDestinationBack.cs" />
+    <Compile Include="Migrations\201612200556329_AddProudctServiceDestinationBack.Designer.cs">
+      <DependentUpon>201612200556329_AddProudctServiceDestinationBack.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612200704219_addDealResultToEnquiry.cs" />
+    <Compile Include="Migrations\201612200704219_addDealResultToEnquiry.Designer.cs">
+      <DependentUpon>201612200704219_addDealResultToEnquiry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612280202191_AddFilesToEqry.cs" />
+    <Compile Include="Migrations\201612280202191_AddFilesToEqry.Designer.cs">
+      <DependentUpon>201612280202191_AddFilesToEqry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612280602476_AddFilePathTable.cs" />
+    <Compile Include="Migrations\201612280602476_AddFilePathTable.Designer.cs">
+      <DependentUpon>201612280602476_AddFilePathTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701021349515_AddOrgnFileNameToFilePathTable.cs" />
+    <Compile Include="Migrations\201701021349515_AddOrgnFileNameToFilePathTable.Designer.cs">
+      <DependentUpon>201701021349515_AddOrgnFileNameToFilePathTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701030223147_AddContentTypeToFilePathTable.cs" />
+    <Compile Include="Migrations\201701030223147_AddContentTypeToFilePathTable.Designer.cs">
+      <DependentUpon>201701030223147_AddContentTypeToFilePathTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701030851092_AddVoterListToPost.cs" />
+    <Compile Include="Migrations\201701030851092_AddVoterListToPost.Designer.cs">
+      <DependentUpon>201701030851092_AddVoterListToPost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701030854331_AddVoterListToPost1.cs" />
+    <Compile Include="Migrations\201701030854331_AddVoterListToPost1.Designer.cs">
+      <DependentUpon>201701030854331_AddVoterListToPost1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701050210364_AddQtypeToEnquiry.cs" />
+    <Compile Include="Migrations\201701050210364_AddQtypeToEnquiry.Designer.cs">
+      <DependentUpon>201701050210364_AddQtypeToEnquiry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701050220199_ChangeTitleConstraintToEnquiry.cs" />
+    <Compile Include="Migrations\201701050220199_ChangeTitleConstraintToEnquiry.Designer.cs">
+      <DependentUpon>201701050220199_ChangeTitleConstraintToEnquiry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701050243349_DeleteFilesTable1.cs" />
+    <Compile Include="Migrations\201701050243349_DeleteFilesTable1.Designer.cs">
+      <DependentUpon>201701050243349_DeleteFilesTable1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701050300477_ChangeSomeRestriction.cs" />
+    <Compile Include="Migrations\201701050300477_ChangeSomeRestriction.Designer.cs">
+      <DependentUpon>201701050300477_ChangeSomeRestriction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701100339139_AddfpCountToEnquiry.cs" />
+    <Compile Include="Migrations\201701100339139_AddfpCountToEnquiry.Designer.cs">
+      <DependentUpon>201701100339139_AddfpCountToEnquiry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701100420148_ChangeRequiredConsolidateInEnquiry.cs" />
+    <Compile Include="Migrations\201701100420148_ChangeRequiredConsolidateInEnquiry.Designer.cs">
+      <DependentUpon>201701100420148_ChangeRequiredConsolidateInEnquiry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701100751502_RemovefpCountFromEnquiry.cs" />
+    <Compile Include="Migrations\201701100751502_RemovefpCountFromEnquiry.Designer.cs">
+      <DependentUpon>201701100751502_RemovefpCountFromEnquiry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701251033119_ChangeFileIntoFileCountInEqry.cs" />
+    <Compile Include="Migrations\201701251033119_ChangeFileIntoFileCountInEqry.Designer.cs">
+      <DependentUpon>201701251033119_ChangeFileIntoFileCountInEqry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702051212582_GroupToEnquirys.cs" />
+    <Compile Include="Migrations\201702051212582_GroupToEnquirys.Designer.cs">
+      <DependentUpon>201702051212582_GroupToEnquirys.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702090345411_RebuildPostVoterRelation.cs" />
+    <Compile Include="Migrations\201702090345411_RebuildPostVoterRelation.Designer.cs">
+      <DependentUpon>201702090345411_RebuildPostVoterRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702090920059_AddPostRelyRelation.cs" />
+    <Compile Include="Migrations\201702090920059_AddPostRelyRelation.Designer.cs">
+      <DependentUpon>201702090920059_AddPostRelyRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702120413299_AddExptsCalledToEnquiry.cs" />
+    <Compile Include="Migrations\201702120413299_AddExptsCalledToEnquiry.Designer.cs">
+      <DependentUpon>201702120413299_AddExptsCalledToEnquiry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702150126569_AddPageView.cs" />
+    <Compile Include="Migrations\201702150126569_AddPageView.Designer.cs">
+      <DependentUpon>201702150126569_AddPageView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702160622332_AddAnswerClass.cs" />
+    <Compile Include="Migrations\201702160622332_AddAnswerClass.Designer.cs">
+      <DependentUpon>201702160622332_AddAnswerClass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702171259341_SomeFieldChanging.cs" />
+    <Compile Include="Migrations\201702171259341_SomeFieldChanging.Designer.cs">
+      <DependentUpon>201702171259341_SomeFieldChanging.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702180409585_AttachmentsForAnswerAndPost.cs" />
+    <Compile Include="Migrations\201702180409585_AttachmentsForAnswerAndPost.Designer.cs">
+      <DependentUpon>201702180409585_AttachmentsForAnswerAndPost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702210834422_NoDirectExpertEnquiryRelation.cs" />
+    <Compile Include="Migrations\201702210834422_NoDirectExpertEnquiryRelation.Designer.cs">
+      <DependentUpon>201702210834422_NoDirectExpertEnquiryRelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702220121094_DeleteUAUPrelation.cs" />
+    <Compile Include="Migrations\201702220121094_DeleteUAUPrelation.Designer.cs">
+      <DependentUpon>201702220121094_DeleteUAUPrelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702220124488_DeleteForvotesInAP.cs" />
+    <Compile Include="Migrations\201702220124488_DeleteForvotesInAP.Designer.cs">
+      <DependentUpon>201702220124488_DeleteForvotesInAP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702220139537_VoteClassAndRelations.cs" />
+    <Compile Include="Migrations\201702220139537_VoteClassAndRelations.Designer.cs">
+      <DependentUpon>201702220139537_VoteClassAndRelations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702220332116_DeletePosterDisplay.cs" />
+    <Compile Include="Migrations\201702220332116_DeletePosterDisplay.Designer.cs">
+      <DependentUpon>201702220332116_DeletePosterDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703070234576_DsnBgtToAnswer.cs" />
+    <Compile Include="Migrations\201703070234576_DsnBgtToAnswer.Designer.cs">
+      <DependentUpon>201703070234576_DsnBgtToAnswer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703280145130_PrivateToEqryComment.cs" />
+    <Compile Include="Migrations\201703280145130_PrivateToEqryComment.Designer.cs">
+      <DependentUpon>201703280145130_PrivateToEqryComment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703300727208_DeleteAVoteInAnswer.cs" />
+    <Compile Include="Migrations\201703300727208_DeleteAVoteInAnswer.Designer.cs">
+      <DependentUpon>201703300727208_DeleteAVoteInAnswer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201703300730328_AddCvoteToEqry.cs" />
+    <Compile Include="Migrations\201703300730328_AddCvoteToEqry.Designer.cs">
+      <DependentUpon>201703300730328_AddCvoteToEqry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704180156084_DeleteExpertClass.cs" />
+    <Compile Include="Migrations\201704180156084_DeleteExpertClass.Designer.cs">
+      <DependentUpon>201704180156084_DeleteExpertClass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704180742333_DeleteEnquirerClass.cs" />
+    <Compile Include="Migrations\201704180742333_DeleteEnquirerClass.Designer.cs">
+      <DependentUpon>201704180742333_DeleteEnquirerClass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704200804083_AddSomeSubClassOfTopic.cs" />
+    <Compile Include="Migrations\201704200804083_AddSomeSubClassOfTopic.Designer.cs">
+      <DependentUpon>201704200804083_AddSomeSubClassOfTopic.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704260332169_AddCmpltdDtToEnqry.cs" />
+    <Compile Include="Migrations\201704260332169_AddCmpltdDtToEnqry.Designer.cs">
+      <DependentUpon>201704260332169_AddCmpltdDtToEnqry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705090603492_AddInCnsldtnToPost.cs" />
+    <Compile Include="Migrations\201705090603492_AddInCnsldtnToPost.Designer.cs">
+      <DependentUpon>201705090603492_AddInCnsldtnToPost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705100215184_DelProviderInAnswer.cs" />
+    <Compile Include="Migrations\201705100215184_DelProviderInAnswer.Designer.cs">
+      <DependentUpon>201705100215184_DelProviderInAnswer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AdvancedSearchViewModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Answer.cs" />
+    <Compile Include="Models\ConsultViewModel.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Enquiry.cs" />
+    <Compile Include="Models\FilePath.cs" />
+    <Compile Include="Models\FileType.cs" />
+    <Compile Include="Models\FunctionViewModels.cs" />
+    <Compile Include="Models\GlobalVariables.cs" />
+    <Compile Include="Models\Group.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Post.cs" />
+    <Compile Include="Models\SearchViewModel.cs" />
+    <Compile Include="Models\SuperHashSet.cs" />
+    <Compile Include="Models\TestMethodAccessibility.cs" />
+    <Compile Include="Models\Topic.cs" />
+    <Compile Include="Models\Vote.cs" />
+    <Compile Include="PortalContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Icons\AddAthmt.png" />
+    <Content Include="Scripts\ai.0.22.19-build00125.js" />
+    <Content Include="Scripts\ai.0.22.19-build00125.min.js" />
+    <Content Include="Scripts\bootbox.js" />
+    <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\chosen.jquery.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <None Include="Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery-1.12.4.js" />
+    <Content Include="Scripts\jquery-1.12.4.min.js" />
+    <Content Include="Scripts\jquery-1.12.4.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -200,7 +544,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -211,8 +557,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -221,7 +565,6 @@
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
@@ -234,9 +577,41 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Home\Search.cshtml" />
+    <Content Include="Views\Home\Advance.cshtml" />
+    <Content Include="Views\Home\Consult.cshtml" />
+    <Content Include="Views\Account\EmailSent.cshtml" />
+    <Content Include="Views\Management\Management.cshtml" />
+    <Content Include="Views\Shared\_BasePartial.cshtml" />
+    <Content Include="Views\Account\ApplyRole.cshtml" />
+    <Content Include="Views\Account\RoleManagement.cshtml" />
+    <Content Include="Views\Shared\Notes.cshtml" />
+    <Content Include="Views\Enquirer\Edit.cshtml" />
+    <Content Include="Views\Home\CnstDetail.cshtml" />
+    <Content Include="Views\Shared\Detail.cshtml" />
+    <Content Include="Views\Shared\RecordAnswer.cshtml" />
+    <Content Include="Views\Shared\CallExperts.cshtml" />
+    <Content Include="Views\Shared\MoreFileEntries.cshtml" />
+    <Content Include="Views\Shared\NvSearch.cshtml" />
+    <Content Include="Views\Shared\Discussions.cshtml" />
+    <Content Include="Views\Enquirer\Join.cshtml" />
+    <Content Include="Views\Shared\ToTechKnowTeam.cshtml" />
+    <Content Include="Views\Shared\ReplyPost.cshtml" />
+    <Content Include="Views\Shared\Testing.cshtml" />
+    <Content Include="Views\Shared\QInfo.cshtml" />
+    <Content Include="Views\Shared\AInfo.cshtml" />
+    <Content Include="Views\Shared\Comment.cshtml" />
+    <Content Include="Views\Enquirer\CaseVote.cshtml" />
+    <Content Include="Views\Home\Library.cshtml" />
+    <Content Include="Views\Enquirer\Index.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial2.cshtml" />
+    <Content Include="Views\Enquirer\EdPost.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="bin\" />
+    <Folder Include="Images\Icons\" />
+    <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -244,7 +619,212 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201611160135273_initial.resx">
+      <DependentUpon>201611160135273_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611160215412_testpath.resx">
+      <DependentUpon>201611160215412_testpath.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611160222485_testfilerecreation.resx">
+      <DependentUpon>201611160222485_testfilerecreation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611160937475_changeUserConstriants.resx">
+      <DependentUpon>201611160937475_changeUserConstriants.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611170227057_changeUserDiscriminatorDefault.resx">
+      <DependentUpon>201611170227057_changeUserDiscriminatorDefault.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611240717237_EnquiryRelatedTables.resx">
+      <DependentUpon>201611240717237_EnquiryRelatedTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611240730508_CustomerRelaCorrct.resx">
+      <DependentUpon>201611240730508_CustomerRelaCorrct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611240828100_changesunremember.resx">
+      <DependentUpon>201611240828100_changesunremember.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611280244579_autoidforEnquiry.resx">
+      <DependentUpon>201611280244579_autoidforEnquiry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611290254103_EnquirYs.resx">
+      <DependentUpon>201611290254103_EnquirYs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611290308268_deleteEnqPos.resx">
+      <DependentUpon>201611290308268_deleteEnqPos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612010807258_subclasses.resx">
+      <DependentUpon>201612010807258_subclasses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612010828484_nullabledatetime.resx">
+      <DependentUpon>201612010828484_nullabledatetime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612050351130_DateTimeGenerationChange.resx">
+      <DependentUpon>201612050351130_DateTimeGenerationChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612050409273_DateTimeGenerationChangeBack.resx">
+      <DependentUpon>201612050409273_DateTimeGenerationChangeBack.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612050425564_RemoveComputedAnnotation.resx">
+      <DependentUpon>201612050425564_RemoveComputedAnnotation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612050630144_EnquiryAssignment.resx">
+      <DependentUpon>201612050630144_EnquiryAssignment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612050819376_KeepConnectionByPosts.resx">
+      <DependentUpon>201612050819376_KeepConnectionByPosts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612050845117_addattronpost.resx">
+      <DependentUpon>201612050845117_addattronpost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612050853077_readytodiscn.resx">
+      <DependentUpon>201612050853077_readytodiscn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612060349198_ChangeAttributePlace.resx">
+      <DependentUpon>201612060349198_ChangeAttributePlace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612070354471_posterdisplay.resx">
+      <DependentUpon>201612070354471_posterdisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612070427051_votescounted.resx">
+      <DependentUpon>201612070427051_votescounted.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612070635487_IsConsolidation.resx">
+      <DependentUpon>201612070635487_IsConsolidation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612140317130_ChangeFildsInEnquiry.resx">
+      <DependentUpon>201612140317130_ChangeFildsInEnquiry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612190323086_ChangeFiestoFileChangeTextRemarktoQdetail.resx">
+      <DependentUpon>201612190323086_ChangeFiestoFileChangeTextRemarktoQdetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612190849376_AddAttributestoEqry.resx">
+      <DependentUpon>201612190849376_AddAttributestoEqry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612200446049_AddTopicTable.resx">
+      <DependentUpon>201612200446049_AddTopicTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612200556329_AddProudctServiceDestinationBack.resx">
+      <DependentUpon>201612200556329_AddProudctServiceDestinationBack.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612200704219_addDealResultToEnquiry.resx">
+      <DependentUpon>201612200704219_addDealResultToEnquiry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612280202191_AddFilesToEqry.resx">
+      <DependentUpon>201612280202191_AddFilesToEqry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612280602476_AddFilePathTable.resx">
+      <DependentUpon>201612280602476_AddFilePathTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701021349515_AddOrgnFileNameToFilePathTable.resx">
+      <DependentUpon>201701021349515_AddOrgnFileNameToFilePathTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701030223147_AddContentTypeToFilePathTable.resx">
+      <DependentUpon>201701030223147_AddContentTypeToFilePathTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701030851092_AddVoterListToPost.resx">
+      <DependentUpon>201701030851092_AddVoterListToPost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701030854331_AddVoterListToPost1.resx">
+      <DependentUpon>201701030854331_AddVoterListToPost1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701050210364_AddQtypeToEnquiry.resx">
+      <DependentUpon>201701050210364_AddQtypeToEnquiry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701050220199_ChangeTitleConstraintToEnquiry.resx">
+      <DependentUpon>201701050220199_ChangeTitleConstraintToEnquiry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701050243349_DeleteFilesTable1.resx">
+      <DependentUpon>201701050243349_DeleteFilesTable1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701050300477_ChangeSomeRestriction.resx">
+      <DependentUpon>201701050300477_ChangeSomeRestriction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701100339139_AddfpCountToEnquiry.resx">
+      <DependentUpon>201701100339139_AddfpCountToEnquiry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701100420148_ChangeRequiredConsolidateInEnquiry.resx">
+      <DependentUpon>201701100420148_ChangeRequiredConsolidateInEnquiry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701100751502_RemovefpCountFromEnquiry.resx">
+      <DependentUpon>201701100751502_RemovefpCountFromEnquiry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701251033119_ChangeFileIntoFileCountInEqry.resx">
+      <DependentUpon>201701251033119_ChangeFileIntoFileCountInEqry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702051212582_GroupToEnquirys.resx">
+      <DependentUpon>201702051212582_GroupToEnquirys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702090345411_RebuildPostVoterRelation.resx">
+      <DependentUpon>201702090345411_RebuildPostVoterRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702090920059_AddPostRelyRelation.resx">
+      <DependentUpon>201702090920059_AddPostRelyRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702120413299_AddExptsCalledToEnquiry.resx">
+      <DependentUpon>201702120413299_AddExptsCalledToEnquiry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702150126569_AddPageView.resx">
+      <DependentUpon>201702150126569_AddPageView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702160622332_AddAnswerClass.resx">
+      <DependentUpon>201702160622332_AddAnswerClass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702171259341_SomeFieldChanging.resx">
+      <DependentUpon>201702171259341_SomeFieldChanging.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702180409585_AttachmentsForAnswerAndPost.resx">
+      <DependentUpon>201702180409585_AttachmentsForAnswerAndPost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702210834422_NoDirectExpertEnquiryRelation.resx">
+      <DependentUpon>201702210834422_NoDirectExpertEnquiryRelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702220121094_DeleteUAUPrelation.resx">
+      <DependentUpon>201702220121094_DeleteUAUPrelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702220124488_DeleteForvotesInAP.resx">
+      <DependentUpon>201702220124488_DeleteForvotesInAP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702220139537_VoteClassAndRelations.resx">
+      <DependentUpon>201702220139537_VoteClassAndRelations.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702220332116_DeletePosterDisplay.resx">
+      <DependentUpon>201702220332116_DeletePosterDisplay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703070234576_DsnBgtToAnswer.resx">
+      <DependentUpon>201703070234576_DsnBgtToAnswer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703280145130_PrivateToEqryComment.resx">
+      <DependentUpon>201703280145130_PrivateToEqryComment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703300727208_DeleteAVoteInAnswer.resx">
+      <DependentUpon>201703300727208_DeleteAVoteInAnswer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703300730328_AddCvoteToEqry.resx">
+      <DependentUpon>201703300730328_AddCvoteToEqry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704180156084_DeleteExpertClass.resx">
+      <DependentUpon>201704180156084_DeleteExpertClass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704180742333_DeleteEnquirerClass.resx">
+      <DependentUpon>201704180742333_DeleteEnquirerClass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704200804083_AddSomeSubClassOfTopic.resx">
+      <DependentUpon>201704200804083_AddSomeSubClassOfTopic.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704260332169_AddCmpltdDtToEnqry.resx">
+      <DependentUpon>201704260332169_AddCmpltdDtToEnqry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705090603492_AddInCnsldtnToPost.resx">
+      <DependentUpon>201705090603492_AddInCnsldtnToPost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705100215184_DelProviderInAnswer.resx">
+      <DependentUpon>201705100215184_DelProviderInAnswer.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

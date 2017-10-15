@@ -1,0 +1,38 @@
+﻿@model Simple02.Models.ConsultViewModel   
+
+
+ @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/jquery-1.7.1.min.js")
+        
+}
+        @{string mfes = "tt" + ViewBag.FileCount;
+            if (@ViewBag.FileCount <2)
+            {
+                <br /><br />
+            }
+        } 
+        <input type="file" id=ViewBag.FileCount name="uploads" class="input-group-sm col-md-offset-0 col-md-8" />  
+        <p>&nbsp;</p>
+        <div id=@mfes>
+            @Html.Raw(Ajax.ActionLink("[replacethis]", "MoreFileEntries", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = mfes }).ToHtmlString().Replace("[replacethis]", "<img src=\"/Icons/AddAthmt.png\" width=20 height=20/>"))
+        </div>
+
+@*
+            @section scripts{
+        @{string tt="#tt"+ ViewBag.FileCount}
+    <script>
+        function OnSuccess(response) {
+
+            $(tt).html(response);
+        }
+
+        function OnFailure(response) {
+            alert("Whoops! That didn't go so well did it?");
+        }
+    </script>
+    }
+*@
+
+    
+    

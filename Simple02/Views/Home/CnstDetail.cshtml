@@ -1,0 +1,173 @@
+﻿@using Microsoft.AspNet.Identity
+@model Simple02.Models.FunctionViewModels.CnslttnDetailViewModel
+
+<div class="row">
+    <ul class="breadcrumb">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("NewCase", "Consult", "Home")</li>
+        <li>ConsultationDetail</li>
+    </ul>
+</div>
+
+@Html.Partial("_BasePartial")
+@{
+    ViewBag.Title = "Consultation Detail";
+    var username = User.Identity.GetUserId();
+}
+<h3>@ViewBag.Title</h3>
+<hr />
+
+
+<div class="ptrow">
+    <h4>Question.</h4>
+</div>
+<div class="row">
+    <div class="col-md-9">
+        <div class="col-md-12 text-left">
+            <div class="text-content">
+                @Html.ValueFor(m => m.eqrytoFbk.Title)
+            </div>
+            <div id="QInfo" class="col-md-offset-0">
+                &nbsp;&nbsp;
+                @Ajax.ActionLink("More >>", "QInfo", "Enquirer", new { PackUp = "Show", EID = Html.ValueFor(m => m.eqrytoFbk.EID) },
+                         new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "QInfo" },
+                         new { @class = "btn-link" }
+                         )
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="ptrow">
+    <h4>Discussion.</h4>
+</div>
+<div class="row">
+    <div class="col-md-9">        
+        <div class="col-md-12">
+            [Show the latest post, should design the appearance first, the appearance will be similar to those posts in discussion]
+            <br /><br />
+            @Html.ActionLink("View More >>", "Join", "Enquirer", new { AID = Html.ValueFor(m => m.eqrytoFbk.ExpertAnswer.AID) }, new {@class= "btn btn-default" })
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="ptrow">
+    <h4>Front-line.</h4>
+</div>        
+<div class="row">
+    <div class="col-md-9">
+        @using (Html.BeginForm("MarkCAnswr", "Home", FormMethod.Post))
+            {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.eqrytoFbk.EID)
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.Label("Answer To Customer", new { @class = "col-md-5 control-label" })
+                <button type="button" class="btn-EdtPost" id="Imprt"><img src="~/Icons/Import.png" width=20 height=20 /></button>
+                <div class="col-md-12">
+                    @Html.TextAreaFor(m => m.eqrytoFbk.AnswerToCustomer, 3, 2, new { @class = "board", required = "required", @cols = "100" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-0 col-md-10">
+                    <form method="post">
+                        <input type="submit" value="Save" name="btnSubmit" class="btn btn-default" />
+                        <input type="submit" value="Post" name="btnSubmit" class="btn btn-default" />
+                        <input type="reset" value="Clear" name="btnClear" class="btn btn-default" />
+                    </form>
+                </div>
+            </div>
+        }
+    </div>           
+</div>        
+
+        @section scripts{
+            @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
+            <script type="text/javascript">
+                function OnSuccess(response) {
+                    $("#QInfo").html(response);
+                }
+                function OnFailure(response) {
+                    alert("Whoops! That didn't go so well did it?");
+                }
+
+                $(document).ready(function () {
+
+                   
+
+                  
+                });
+            </script>
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+        @*
+
+    $("#DJRqst").on("click", function () {
+                bootbox.prompt({
+                    title: "Request to join the discussion",
+                    inputType: 'select',
+                    inputOptions: [
+                        {
+                            text: 'I want to join the discussion because ...',
+                            value: '',
+                        },
+                        {
+                            text: 'The customer is leaving',
+                            value: '1',
+                        },
+                        {
+                            text: 'Expected Reply Date has been passed',
+                            value: '2',
+                        },
+                        {
+                            text: 'I am interested in the techniques',
+                            value: '3',
+                        }
+                    ],
+                    callback: function (result) {
+                        $.ajax({
+                            url: '/Enquirer/Delete',
+                            success: function () {
+
+                            }
+                        })
+                    .success(function (result) {
+                        bootbox.alert("Request has been sent, please wait for the result !");
+                    })
+                    .error(function (xhr, status) {
+                        alert(status);
+                    })
+
+                    }
+
+                });
+
+            });
+
+
+    var button = $(this);
+
+
+     
+
+
+        *@
+
+
+
+
+
+

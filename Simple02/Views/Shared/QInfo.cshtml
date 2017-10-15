@@ -1,0 +1,72 @@
+﻿@model Simple02.Models.FunctionViewModels.CaseDetailViewModel
+
+@if (ViewBag.pkp == "Show")
+{
+    <table class="table-bordered col-md-offset-1" width="820">
+        <tr>
+            <td width=20%>Product</td>
+            <td>@Html.ValueFor(m => m.eqrytoVw.Product)</td>
+        </tr>
+        <tr>
+            <td width=20%>Service Request</td>
+            <td>@Html.ValueFor(m => m.eqrytoVw.Service)</td>
+        </tr>
+        <tr>
+            <td width=20%>Destination of the Product</td>
+            <td>@Html.ValueFor(m => m.eqrytoVw.Destination)</td>
+        </tr>
+        <tr>
+            <td width=20%>Attachments</td>
+            <td>
+                <dl class="col-md-12">
+                    @if (Model.eqrytoVw.FilePaths.Any(f => f.FileType == FileType.Ref))
+                    {
+                        <dt>
+                            Photos
+                        </dt>
+                        foreach (FilePath atmt in Model.eqrytoVw.FilePaths.Where(f => f.FileType == FileType.Ref).AsEnumerable())
+                        {
+                            <dd style="display:inline">
+                                <a href="@Url.Action("Download", "Expert", new {ImageName = atmt.FileName })"><img src="~/Images/@atmt.FileName" alt="Ref" width="30" height="30" /></a>
+                                &nbsp;&nbsp;
+                            </dd>
+                        }
+
+                    }
+                    @if (Model.eqrytoVw.FilePaths.Any(f => f.FileType == FileType.Tex))
+                    {
+                        <dt>
+                            Non-photo Attachments
+                        </dt>
+                        foreach (FilePath atmt in Model.eqrytoVw.FilePaths.Where(f => f.FileType == FileType.Tex).AsEnumerable())
+                        {
+                            <dd>
+                                @Html.ActionLink(atmt.OrgnFileName, "DownloadTF", "Expert", routeValues: new
+                           {
+                               TextFileName = atmt.FileName,
+                               ContentType = atmt.ContentType,
+                               DownloadName = atmt.OrgnFileName
+                           }, htmlAttributes: null)
+                            </dd>
+                        }
+
+                    }
+
+                </dl>
+
+            </td>
+        </tr>
+    </table>
+    @Ajax.ActionLink("<< Pack Up", "QInfo", "Enquirer", new { PackUp = "NotShow", EID = Html.ValueFor(m => m.eqrytoVw.EID) },
+                             new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "QInfo" },
+                             new { @class = "btn-link col-md-offset-1" }
+                             )
+}
+else {
+    <text>&nbsp;&nbsp;</text>
+    @Ajax.ActionLink("More >>", "QInfo", "Enquirer", new { PackUp = "Show",EID=Html.ValueFor(m=>m.eqrytoVw.EID) },
+                         new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "QInfo" },
+                         new { @class = "btn-link" }
+                         )
+}
+

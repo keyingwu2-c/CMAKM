@@ -1,0 +1,154 @@
+﻿@using Microsoft.AspNet.Identity
+@using PagedList.Mvc;
+@model Simple02.Models.FunctionViewModels.NotesViewModel
+@Html.Partial("_BasePartial")
+
+        
+        @*Use Ajax or Html BeginForm ? *@
+        @{List<SelectListItem> SrchByChoices = new List<SelectListItem>();
+            SrchByChoices.Add(new SelectListItem
+            {
+                Text = "Product",
+                Value = "Product",
+            });
+            SrchByChoices.Add(new SelectListItem
+            {
+                Text = "Service",
+                Value = "Service"
+            });
+
+           }
+
+        
+        <div  class="row">
+            <h3>All Cases</h3>
+            <div class="col-md-offset-0">
+                <div class="col-md-9">
+                    Search:
+                    @Html.TextBoxFor(m => m.SrchStr, new { @class = "form-control", style = "display:inline" })
+                    @Html.DropDownListFor(m => m.SrchBy, SrchByChoices, "-- Specify Fields To Search --", new { @class = "form-control", style = "display:inline" })
+                    @Html.Raw(Ajax.ActionLink("[replacethis]", "NvSearch", "Enquirer", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "SrhUpdate" }).ToHtmlString().Replace("[replacethis]", "<img src=\"/Icons/Search.ico\" width=30 height=30/>"))
+                </div>
+                <div class="col-md-3">
+                    Add New:
+                    <a href="@Url.Action("Consult", "Home", null)"><img src="~/Icons/AddAthmt.png" alt="" width="25" height="25" /></a>
+                </div>
+            </div>
+            <br /><br />
+    
+            <div id="SrhUpdate">
+                <table cellspacing="8" border="1" class="table">
+                    <tr>
+                        <th>
+                            @Html.ActionLink("Question", "Index", new { sortOrder = ViewBag.QSortParm })
+                        </th>
+                        <th>
+                            @Html.ActionLink("Product", "Index", new { sortOrder = ViewBag.PSortParm })
+                        </th>
+                        <th>
+                            @Html.ActionLink("LastUpdate", "Index", new { sortOrder = ViewBag.LDSortParm })
+                        </th>
+                        <th>
+                            @Html.ActionLink("Noter", "Index", new { sortOrder = ViewBag.NSortParm })
+                        </th>
+                    </tr>
+                    @for (var i = 0; i < ViewBag.llen; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(Html.ValueFor(m => m.AllCases[@i].Title).ToString(), "Detail", "Enquirer", routeValues: new { EID = Html.ValueFor(m => m.AllCases[@i].EID) }, htmlAttributes: null)
+                            </td>
+                            <td>@Html.ValueFor(m => m.AllCases[@i].Product)</td>
+                            <td>@Html.ValueFor(m => m.AllCases[@i].lastUpated)</td>
+                            <td>@Html.ValueFor(m => m.AllCases[@i].Noter.UserName)</td>
+                        </tr>
+                    }
+                </table>
+                Page @ViewBag.LPageNumber of @ViewBag.LPageCount  @Html.PagedListPager(Model.AllCases, lpage => Url.Action("Library", new { lpage }))
+
+
+            </div>   
+        </div>
+
+            <div class="row">
+                <h3>Cases stored by you</h3>
+                <table id="YourNotes" cellspacing="8" border="1" class="table">
+                    <tr>
+                        <th>
+                            Question
+                        </th>
+
+                        <th>
+                            LastUpdate
+                        </th>
+                        <th>
+                            Operations
+                        </th>
+                    </tr>
+                    @for (var i = 0; i < 6 && i < ViewBag.len; i++)
+                    {
+                        var pass = Html.ValueFor(m => m.YourNotes[i].EID).ToString();
+                        <tr>
+                            <td>
+                                @Html.ValueFor(m => m.YourNotes[@i].Title)
+                            </td>
+                            <td>
+                                @Html.ValueFor(m => m.YourNotes[@i].lastUpated)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", "Enquirer", routeValues: new { EID = Html.ValueFor(m => m.YourNotes[i].EID) }, htmlAttributes:null )
+                                <text>|</text>
+                                <button class="btn-link js-delete" data-eqry-EID=@pass>Delete</button>
+                            </td>
+                        </tr>}
+                </table>
+                Page @ViewBag.PageNumber of @ViewBag.PageCount
+                @Html.PagedListPager(Model.YourNotes, page => Url.Action("Library", new { page }))
+            </div>
+
+
+
+@*
+     @using (Html.BeginForm("Delete", "Enquirer", new { EID = Html.ValueFor(m => m.cases.YourNotes[i].EID) }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.ActionLink("Edit", "Edit", "Enquirer", routeValues: new { EID = Html.ValueFor(m => m.cases.YourNotes[i].EID) }, htmlAttributes: null)
+                                    <text>|</text>
+                                    <input type="submit" value="Delete" class="btn-link" />
+                                }
+
+
+            <div class="col-md-12">
+                @Html.Label("Enquiry Type")<text class="text-danger">*</text>
+                <br />
+                Test: @Html.RadioButtonFor(m => m.Case.Qtype, Enquiry.QType.Test, htmlAttributes: new { @checked = true, onchange = "this.form.submit();" }) &nbsp;&nbsp;
+                Regulation: @Html.RadioButtonFor(m => m.Case.Qtype, Enquiry.QType.Regulation, htmlAttributes: new { onchange = "this.form.submit();" }) &nbsp;&nbsp;
+                Other: @Html.RadioButtonFor(m => m.Case.Qtype, Enquiry.QType.Other, htmlAttributes: new { onchange = "this.form.submit();" })
+            </div>
+
+            @switch (Html.ValueFor(m => m.Case.Qtype).ToString())
+            {
+                case "Other":
+                    <p>&nbsp;</p>
+                    <div class="col-md-12">
+                        @Html.Label("New Enquiry Type")<text class="text-danger">*</text>
+                        @Html.TextBoxFor(m => m.Case.TypeSpecified, new { @class = "form-control"})
+                    </div>
+                    break;
+                case "Regulation":
+                    <p>&nbsp;</p>
+                    <div class="col-md-12">
+                        @Html.Label("Regulation Type/Name")<text class="text-danger">*</text>
+                        @Html.TextBoxFor(m => m.Case.Regulation, new { @class = "form-control" })
+                    </div>
+                    break;
+                default:
+                    break;
+            }
+            <p>&nbsp;</p>
+
+
+
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+    }*@

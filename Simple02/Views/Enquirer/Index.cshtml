@@ -1,0 +1,19 @@
+﻿@using Microsoft.AspNet.Identity
+@Html.Partial("_BasePartial")
+@{
+    ViewBag.Title = "Expert";
+    var username = User.Identity.GetUserId();
+}
+<br />
+@Html.Partial("Discussions")
+<br />
+
+        
+@section scripts{
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
+
+    <script type="text/javascript">
+
+    </script>
+}
+

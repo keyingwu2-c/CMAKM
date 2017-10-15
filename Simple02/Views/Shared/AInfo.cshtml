@@ -1,0 +1,110 @@
+﻿@model Simple02.Models.FunctionViewModels.CaseDetailViewModel
+
+@if (ViewBag.pkp == "Show")
+{
+    
+        if (Model.eqrytoVw.ExpRpDate != null)
+        {
+            <table class="table-bordered col-md-offset-1" width="820">
+                <tr>
+                    <th colspan="2">Answers from Consultation</th>
+                </tr>
+                <tr>
+                    <th>Facilitator</th>
+                    <th>Content</th>
+                </tr>
+                @foreach (Answer exptasr in Model.eqrytoVw.ExpertAnswers)
+                {
+                  <tr>
+                      <td td width=30%>@Html.Label(exptasr.Provider.UserName, new { @class = "control-label text-left" })</td>
+                      <td>
+                          @if (exptasr.content == null)
+                          { <p>[Haven't received yet.]</p>}
+                          else
+                          {
+                              <p>
+                                  @exptasr.content.ToString()                                 
+                              </p>
+                              <p>
+                                  <dl class="col-md-12">
+                                      @if (exptasr.FilePaths.Any(f => f.FileType == FileType.Ref))
+                            {
+                                          <dt>
+                                              Photos
+                                          </dt>
+                                          foreach (FilePath atmt in exptasr.FilePaths.Where(f => f.FileType == FileType.Ref).AsEnumerable())
+                                          {
+                                              <dd style="display:inline">
+                                                  <a href="@Url.Action("Download", "Enquirer", new {ImageName = atmt.FileName })"><img src="~/Images/@atmt.FileName" alt="Ref" width="30" height="30" /></a>
+                                                  &nbsp;&nbsp;
+                                              </dd>
+                                          }
+
+                                      }
+                                      @if (exptasr.FilePaths.Any(f => f.FileType == FileType.Tex))
+                            {
+                                          <dt>
+                                              Non-photo Attachments
+                                          </dt>
+                                          foreach (FilePath atmt in exptasr.FilePaths.Where(f => f.FileType == FileType.Tex).AsEnumerable())
+                                          {
+
+                                              <dd>
+                                                  @Html.ActionLink(atmt.OrgnFileName, "DownloadTF", "Enquirer", routeValues: new
+                                   {
+                                       TextFileName = atmt.FileName,
+                                       ContentType = atmt.ContentType,
+                                       DownloadName = atmt.OrgnFileName
+                                   }, htmlAttributes: null)
+
+                                              </dd>
+                                          }
+
+                                      }
+
+                                  </dl>
+                              </p>
+                              if (exptasr.dcsnStatus == "off")
+                              {
+                                  <button type="button" value="" id="DJRqst" name="btnSubmit" class="btn btn-default">Join Discussion</button>
+                              }
+                              else
+                              {
+                                  <p class="text-private">
+                                      No discussion has been created.
+                                  </p>
+                                  <button type="button" value="" id="MRqst" name="btnSubmit" class="btn btn-default">Contact Answerer</button>
+                              }
+                        
+                          }
+                      </td>
+                  </tr>  
+
+                }
+
+             </table>
+                
+           }else{
+               <p>None</p>  
+           }
+            
+
+    @Ajax.ActionLink("<< Pack Up", "AInfo", "Enquirer", new { PackUp = "NotShow", EID = Html.ValueFor(m => m.eqrytoVw.EID) },
+                             new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "AInfo" },
+                             new { @class = "btn-link col-md-offset-1" }
+                             )
+}
+else
+{
+    <text>&nbsp;&nbsp;</text>
+    @Ajax.ActionLink("More >>", "AInfo", "Enquirer", new { PackUp = "Show", EID = Html.ValueFor(m => m.eqrytoVw.EID) },
+                         new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "AInfo" },
+                         new { @class = "btn-link" }
+                         )
+}
+
+
+
+@*
+    @Html.ActionLink(">>Discussion", "Join", "Enquirer", new { AID = exptasr.AID, fromAsg=false }, new { @class = "col-md-offset-1" })
+*@

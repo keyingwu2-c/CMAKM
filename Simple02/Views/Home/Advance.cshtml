@@ -1,0 +1,131 @@
+﻿@using Microsoft.AspNet.Identity
+@Html.Partial("_BasePartial")
+@model Simple02.Models.AdvancedSearchViewModel
+@{
+    ViewBag.Title = "Advanced Search";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+@using (Html.BeginForm("Consult", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    //@Html.AntiForgeryToken()
+    <h4>@ViewBag.massage</h4>
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.CName, new { @class = "col-md-15 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.CName, new { @class = "form-control" })
+        </div>
+    </div>
+
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+    {
+        Text = "Test Advices",
+        Value = "1",
+        Selected = true
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Regulations",
+        Value = "2",
+
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Others",
+        Value = "3"
+    });
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.PdName, new { @class = "col-md-15 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.PdName, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Destination, new { @class = "col-md-15 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Destination, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Origination, new { @class = "col-md-15 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Origination, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Type, new { @class = "col-md-6 control-label" }) @*don't know why there is space in front of*@
+        <div class="col-md-5">
+            @Html.DropDownListFor(m => m.Type, listItems, "-- Select Status --")
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Dvs, "Select Divsions involved: <= 2 choices",new { @class = "col-md-10 control-label", style = "display:inline;" })      
+        @Html.DropDownListFor(model => model.Dvs, new SelectList(new[] { "Food & Pharmaceutical", "Electrical", "Toys & Material", "Business & Divisions" }), new { @class = "chosen", multiple = "multiple",style = "width:350px;" })
+            @*The above line should be corrected later, the second parameter is not in the right way*@      
+    </div>
+       
+        <div class="form-group">
+            @Html.LabelFor(m => m.SearchStr, new { @class = "col-md-15 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.SearchStr, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Question, new { @class = "col-md-25 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Question, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <form method="post">
+                    <input type="submit" value="Search" name="btnSubmit" class="btn btn-default" />
+                    <input type="reset" value="Clear" name="btnClear" class="btn btn-default" />
+                </form>
+            </div>
+        </div>
+        <table cellpadding="12">
+            <tr>
+                <th>
+                    @Html.NameFor(m => m.lstResult.ElementAt(0).Title)
+                </th>
+                <th>
+                    @Html.NameFor(m => m.lstResult.ElementAt(0).AnswerToCustomer)
+                </th>
+            </tr>
+
+            @for (var i = 0; i < @ViewBag.count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.ValueFor(m => m.lstResult.ElementAt(@i).Title)
+                    </td>
+                    <td>
+                        @Html.ValueFor(m => m.lstResult.ElementAt(@i).AnswerToCustomer)
+                    </td>
+                </tr>
+
+            }
+
+        </table>
+
+
+        }
+
+    </div>
+</div>

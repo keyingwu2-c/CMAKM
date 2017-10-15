@@ -1,0 +1,246 @@
+﻿@using Microsoft.AspNet.Identity
+@using PagedList.Mvc;
+@Html.Partial("_BasePartial")
+@model Simple02.Models.ConsultViewModel
+
+@{
+    ViewBag.Title = "New Case";
+}
+
+<div class="row"> 
+    
+            @using (Html.BeginForm("Consult","Home", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+            {
+                List<SelectListItem> Services = new List<SelectListItem>();
+                Services.Add(new SelectListItem
+                {
+                    Text = "Techincal Questions",
+                    Value = "Techincal Questions",
+                });
+                Services.Add(new SelectListItem
+                {
+                    Text = "Test Advice",
+                    Value = "Test Advice"
+                });
+                Services.Add(new SelectListItem
+                {
+                    Text = "Pricing Consultation",
+                    Value = "Pricing Consultation"
+                });
+
+                @Html.AntiForgeryToken()
+                
+                <div class="col-md-5">
+                        <div class="col-md-10">
+                            <h3>@ViewBag.Title</h3>
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })   
+                        </div>       
+                        <div class="col-md-10">
+                            @Html.Label("Question")<text class="text-danger">*</text>
+                            @Html.TextBoxFor(m => m.techEqry.Title, new { @class = "form-control", required = "required" })
+                        </div>
+                        <div class="col-md-10">
+                            @Html.LabelFor(m => m.techEqry.Product)<text class="text-danger">*</text>
+                            @Html.TextBoxFor(m => m.techEqry.Product, new { @class = "form-control", required = "required", autocomplete = "off" })
+                        </div> 
+                        <div class="col-md-10">
+                            @Html.LabelFor(m => m.techEqry.Service)
+                            @Html.DropDownListFor(m => m.techEqry.Service, Services, "-- Select Status --", new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-10">
+                            @Html.LabelFor(m => m.techEqry.Destination)
+                            @Html.TextBoxFor(m => m.techEqry.Destination, new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-10">
+                            @Html.Label("Query Detail", new { })
+                            @Html.TextBoxFor(m => m.techEqry.Qdetail, new { @class = "form-control" })
+                        </div>
+                        <div class="col-md-10">
+                            @Html.Label("Attachments", new { }) <br />
+                            <input type="file" id=0 name="uploads" class="input-group-sm col-md-offset-0 col-md-8" />
+                            <div id="MoreFileErs" class="col-md-offset-0">
+                                @Html.Raw(Ajax.ActionLink("[replacethis]", "MoreFileEntries", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "MoreFileErs" }).ToHtmlString().Replace("[replacethis]", "<img src=\"/Icons/AddAthmt.png\" width=20 height=20/>"))
+                            </div>
+                        </div>
+                        <p>&nbsp;</p>
+                        <div id="ShowPartial">
+                            <div class="col-md-10">
+                                <br />
+                                @Ajax.ActionLink("Add Answer", "RecordAnswer", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "ShowPartial" })
+                                &nbsp;|&nbsp;
+                                @Ajax.ActionLink("Consult Experts", "CallExperts", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "ShowPartial" })
+                                &nbsp;|&nbsp;
+                                @Ajax.ActionLink("Consult TechKnowTeam", "ToTechKnowTeam", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "ShowPartial" })
+                            </div>
+                            <div class="col-md-offset-0 col-md-10">
+                                <br />
+                                @if (!String.IsNullOrEmpty(ViewBag.Status))
+                                {
+                                    <div class="alert alert-success">
+                                        @ViewBag.Status
+                                    </div>
+                                }
+                                else
+                                {
+                                    <form method="get">
+                                        <input type="reset" value="Clear" name="btnClear" class="btn btn-default" />
+                                    </form>
+                                }
+                                <p>&nbsp;</p>
+                            </div>
+                        </div>
+                   </div>
+
+               <div class="col-md-7">
+                   <br /><br /><br /><br />
+                   <div class="jumbotron">
+                       <h4>Can these help you ?</h4>
+                       <p>
+                           Get started with Google Drive for free and have all your files within reach from any smartphone, tablet, or computer. All your files in Drive – like ...
+                       </p>
+                       <p>
+                           Get started with Google Drive for free and have all your files within reach from any smartphone, tablet, or computer. All your files in Drive – like ...
+                       </p>
+
+                       <br />
+                       <h4>Recently Added :</h4>
+                       <p>
+                           Google Drive is a safe place for all your files and puts them within reach from any smartphone, tablet, or computer. Files in Drive – like your videos, photos, and ...
+                       </p>
+                       <p>
+                           Google Drive is a safe place for all your files and puts them within reach from any smartphone, tablet, or computer. Files in Drive – like your videos, photos, and ...
+                       </p>
+                   </div>
+               </div>
+            }
+ 
+</div>
+<br />
+<hr />
+<a name="listsctn"></a>
+<div class="row">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs">
+            <li class="@ViewBag.liclass1"><a data-toggle="tab" href="#Crrnt">Current Consultations</a></li>
+            <li class="@ViewBag.liclass2"><a data-toggle="tab" href="#Past">Past Consultations</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="Crrnt" class="@ViewBag.tabclass1">
+                <table cellpadding="9" class="table">
+                    <tr>
+                        <th>Title</th>
+                        <th>ExpectedReplyDate</th>
+                    </tr>
+                    @for (var i = 0; i < Model.crntConsultations.Count; i++)
+            {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(Html.ValueFor(m => m.crntConsultations.ElementAt(@i).Title).ToString(), "CnstDetail", "Home", routeValues: new { EID = Html.ValueFor(m => m.crntConsultations.ElementAt(@i).EID) }, htmlAttributes: null)
+                            </td>
+                            <td>@Html.ValueFor(m => m.crntConsultations.ElementAt(@i).ExpRpDate)</td>
+                        </tr>
+                    }
+
+                </table>
+                <br />
+                Page @Model.crntConsultations.PageNumber of @Model.crntConsultations.PageCount
+                @Html.PagedListPager(Model.crntConsultations, page => Url.Action("Consult", new { page })+"#listsctn")
+            </div>
+            <div id="Past" class="@ViewBag.tabclass2">
+                <table cellpadding="9" class="table">
+                    <tr>
+                        <th>Title</th>
+                        <th>CompletedDate</th>
+                        <th>LastUpdated</th>
+                    </tr>
+                    @for (var i = 0; i < Model.pastConsultations.Count; i++)
+            {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(Html.ValueFor(m => m.pastConsultations.ElementAt(@i).Title).ToString(), "CnstDetail", "Home", routeValues: new { EID = Html.ValueFor(m => m.pastConsultations.ElementAt(@i).EID) }, htmlAttributes: null)
+                            </td>
+                            <td>
+                                @Html.ValueFor(m => m.pastConsultations.ElementAt(@i).CompletedDate)
+                            </td>
+                            <td>
+                                @Html.ValueFor(m => m.pastConsultations.ElementAt(@i).lastUpated)
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+                <br />
+                Page @Model.pastConsultations.PageNumber of @Model.pastConsultations.PageCount
+                @Html.PagedListPager(Model.pastConsultations, spage => Url.Action("Consult", new { spage }) + "#listsctn")
+            </div>     
+        </div>        
+
+    </div>
+ 
+</div>
+
+   
+    
+
+
+@section scripts{
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
+    <script type="text/javascript">
+        function OnSuccess(response) {
+            $("#ShowPartial").html(response);
+        }
+        function OnFailure(response) {
+            alert("Whoops! That didn't go so well did it?");
+        }
+    </script>
+   
+    <script type="text/javascript">
+        function OnSuccess(response) {
+            $("#MoreFileErs").html(response);
+        }
+        function OnFailure(response) {
+            alert("Whoops! That didn't go so well did it?");
+        }
+        @{string divid = "#tt" + @ViewBag.FileCount;}
+
+        function OnSuccess(response) {
+            $(@divid).html(response);
+        }
+        function OnFailure(response) {
+            alert("Whoops! That didn't go so well did it?");
+        }
+    
+    </script>
+
+}
+
+
+
+
+
+@*
+
+
+
+    $.ajax({
+                url: this.href,
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#results').html(result);
+                }
+            });
+            return false;
+
+    <td>
+                            @if (Model.crntConsultations.ElementAt(@i).ExpertAnswers.Any(a => a.dcsnStatus != "wait") == false)
+                            {
+                                @Html.ActionLink("Cancel", "Cancel", "Home", routeValues: new { EID = Html.ValueFor(m => m.crntConsultations.ElementAt(@i).EID) }, htmlAttributes: null)
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Feedback", "Feedback", "Home", routeValues: new { EID = Html.ValueFor(m => m.crntConsultations.ElementAt(@i).EID) }, htmlAttributes: null)
+                            }
+
+                        </td>
+*@

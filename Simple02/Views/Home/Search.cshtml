@@ -1,0 +1,99 @@
+﻿@using Microsoft.AspNet.Identity
+@Html.Partial("_BasePartial")
+@model Simple02.Models.SearchViewModel
+@{
+    ViewBag.Title = "Basic Search";
+}
+<br />
+<div class="toprow">
+    @using (Html.BeginForm("Search", "Home", FormMethod.Post, new { role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+  
+            <div class="col-md-3" style="display:inline">
+
+            </div>
+            <div class="col-md-5">
+                @Html.LabelFor(m => m.SearchStr, new { style = "display:inline" })
+                @Html.TextBoxFor(m => m.SearchStr, new { @class = "form-control", style = "display:inline" })
+                <input type="submit" value="Go" name="btnSubmit" class="btn btn-default" />
+            </div>
+            <div class="col-md-4">
+                @Html.ActionLink("Advanced Search", "Advance", "Home")<br />
+                @Html.ActionLink("See All", "Advance", "Home")
+            </div>
+
+    }
+</div>
+<hr />
+<br />
+<div class="row">
+    <div class="col-md-3">
+        Google Scholar is a freely accessible web search engine that indexes the full text or metadata of scholarly literature across an array of publishing formats and ...
+        <div class="jumbotron">
+            <p>
+                Google Scholar is a freely accessible web search engine that indexes the full text or metadata of scholarly literature across an array of publishing formats and ...
+            </p>
+        </div>
+        <div class="jumbotron">
+            <p>
+                Google Scholar is a freely accessible web search engine that indexes the full text or metadata of scholarly literature across an array of publishing formats and ...
+            </p>
+        </div>
+    </div>
+    <div class="col-md-9">
+        Find @ViewBag.Count Cases
+        <br /><br />
+        @if (ViewBag.Count > 0)
+        {
+        <table cellpadding="10" class="table-noborder">
+            @for (var i = 0; i < ViewBag.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Html.ValueFor(m => m.Results[@i].Title)
+                        <p>Can you see me ?</p>
+                    </td>                 
+                </tr>
+            }
+        </table>
+        }
+    </div>
+    
+</div>
+
+
+
+@*
+    <input type="reset" value="Clear" name="btnClear" class="btn btn-default" />
+
+    <table cellpadding="14">
+                <tr>
+                    <th>
+                        Enquiry Tilte
+                    </th>
+                    <th>
+                        Answer Consolidation
+                    </th>
+                    <th>
+                        LastUpdated
+                    </th>
+                </tr>
+                @for (var i = 0; i < @ViewBag.count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(Html.ValueFor(m => m.lstResult.ElementAt(@i).Title).ToString(), "Detail", "Home", routeValues: new { EID = Html.ValueFor(m => m.lstResult.ElementAt(@i).EID) }, htmlAttributes: null)
+                        </td>
+                        <td>
+                            @Html.ValueFor(m => m.lstResult.ElementAt(@i).AnswerToCustomer)
+                        </td>
+                        <td>
+                            @Html.ValueFor(m => m.lstResult.ElementAt(@i).lastUpated, "{0:d MMM yyyy}")
+                        </td>
+                    </tr>
+
+                }
+
+            </table>
+*@

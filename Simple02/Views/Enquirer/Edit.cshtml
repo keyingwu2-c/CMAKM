@@ -1,0 +1,143 @@
+﻿@using Microsoft.AspNet.Identity
+@using PagedList.Mvc;
+@model Simple02.Models.FunctionViewModels.CaseDetailViewModel
+@Html.Partial("_BasePartial")
+@{
+    var username = User.Identity.GetUserId();
+}
+
+<div class="row">
+    <ul class="breadcrumb">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("Library", "Library", "Home")</li>
+        <li>CaseEdit</li>
+    </ul>
+</div>
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Modify the note you made</h3>
+    </div>
+
+    @using (Html.BeginForm("Edit", "Enquirer", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.eqrytoVw.EID)
+        <table cellpadding="1" cellspacing="1" align="left" class="table-noborder">
+            <tr>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            </tr>
+            <tr>
+                <td width=30%>
+                    <div class="col-md-12">
+                        @Html.Label("Question / Title", new { })
+                        @Html.TextBoxFor(m => m.eqrytoVw.Title, new { @class = "form-control" })
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-12">
+                        @Html.Label("Product", new { })
+                        @Html.TextBoxFor(m => m.eqrytoVw.Product, new { @class = "form-control" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="col-md-12">
+                        @Html.Label("Query Detail", new { })
+                        @Html.TextAreaFor(m => m.eqrytoVw.Qdetail, new { @class = "form-control", rows = "4" })
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-12">
+                        @Html.Label("Service Requested", new { })
+                        @Html.TextBoxFor(m => m.eqrytoVw.Service, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-12">
+                        @Html.Label("Destination", new { })
+                        @Html.TextBoxFor(m => m.eqrytoVw.Destination, new { @class = "form-control" })
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="col-md-12">
+                        @Html.Label("Attachments", new { })
+                        <dl>
+                            @if (Model.eqrytoVw.FilePaths.Any(f => f.FileType == FileType.Ref))
+                            {
+                                <dt>
+                                    Photos
+                                </dt>
+                                foreach (FilePath atmt in Model.eqrytoVw.FilePaths.Where(f => f.FileType == FileType.Ref).AsEnumerable())
+                                {
+                                    <dd style="display:inline">
+                                        <a href="@Url.Action("Download", "Expert", new {ImageName = atmt.FileName })"><img src="~/Images/@atmt.FileName" alt="Ref" width="30" height="30" /></a>
+                                        &nbsp;&nbsp;
+                                    </dd>
+                                }
+
+                            }
+                            @if (Model.eqrytoVw.FilePaths.Any(f => f.FileType == FileType.Tex))
+                            {
+                                <dt>
+                                    Non-photo Attachments
+                                </dt>
+                                foreach (FilePath atmt in Model.eqrytoVw.FilePaths.Where(f => f.FileType == FileType.Tex).AsEnumerable())
+                                {
+                                    <dd>
+                                        @Html.ActionLink(atmt.OrgnFileName, "DownloadTF", "Expert", routeValues: new
+                                       {
+                                           TextFileName = atmt.FileName,
+                                           ContentType = atmt.ContentType,
+                                           DownloadName = atmt.OrgnFileName
+                                       }, htmlAttributes: null)
+                                    </dd>
+                                }
+
+                            }
+
+                        </dl>
+                    </div>
+                </td>
+                <td>
+                    <div class="col-md-12">
+                        @Html.Label("Answer To Customer", new { })
+                        @Html.TextAreaFor(m => m.eqrytoVw.AnswerToCustomer, new { @class = "form-control", rows = "4" })
+                    </div>
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <div class="col-md-12">
+                        <input type="submit" value="Update" name="btnSubmit" class="btn btn-default" />
+                        <input type="reset" value="Clear" name="btnClear" class="btn btn-default" />
+                    </div>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+
+    }
+
+</div>
+<br />
+
+@section scripts{
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
+
+    <script type="text/javascript">
+
+    function OnSuccess(response) {
+
+        $("#SrhUpdate").html(response);
+    }
+
+    function OnFailure(response) {
+        alert("Whoops! That didn't go so well did it?");
+    }
+
+    </script>
+}

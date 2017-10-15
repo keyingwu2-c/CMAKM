@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,6 +8,12 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Simple02.Models;
+using URE.Common_Code;
+using System.Net;
+using System.Data.Entity;
+using System.Collections.Generic;
+using System.Data.Entity.Validation;
+using System.Collections;
 
 namespace Simple02.Controllers
 {
@@ -52,12 +57,82 @@ namespace Simple02.Controllers
             }
         }
 
+        //Cannot set the object type to subclass object yet. Not sure whether should use only "ApplicationUser" for different types OR add copy methods in SubClasses
+        [AllowAnonymous]
+        public async Task<ActionResult> ApproveRoleRqst(string userId,string roleName)
+        {
+            
+            var Result = await UserManager.AddToRoleAsync(userId, roleName);
+            ViewBag.msg = "You have approved the request ! ";//+Result.Succeeded.ToString();
+            return View("RoleManagement");
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> RejectRoleRqst(string emailaddress)
+        {
+            IdentityMessage request = new IdentityMessage();
+            request.Body = "Sorry, your role request has been rejected.";
+            request.Subject = "Role Management";
+            request.Destination = emailaddress;
+
+            EmailService rolerequest = new EmailService();
+            await rolerequest.SendAsync01(request);
+
+            ViewBag.msg = "You have rejected the request !";
+            return View("RoleManagement");
+        }
+
+        //[AllowAnonymous]
+        public ActionResult ApplyRole()//string returnUrl)
+        {
+            //ViewBag.ReturnUrl = returnUrl;
+            //ApplicationDbContext getRoleList = new ApplicationDbContext();
+            //var RoleList = getRoleList.Customers.Include(c => c.CID).ToList();
+            //var RoleList = getRoleList.Customers.Include(c=>c.CID);
+            //IEnumerable<Customer> Customers = RoleList.AsEnumerable();
+            //return Content("");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ApplyRole(ApplyRoleViewModel model)
+        {           
+            string completeEmailAdd = model.Email + "@cmatcl.com";
+            string userid = User.Identity.GetUserId();
+            string username = User.Identity.GetUserName();
+            string rolename = model.RequestedRole;
+
+            ApplicationDbContext storeEmailAdd = new ApplicationDbContext();
+            storeEmailAdd.Users.Find(userid).Email=completeEmailAdd;
+            storeEmailAdd.SaveChanges();
+
+            var approveUrl = Url.Action("ApproveRoleRqst", "Account", new {userId= userid, roleName=rolename }, protocol: Request.Url.Scheme);
+            var rejectUrl= Url.Action("RejectRoleRqst", "Account", new { emailaddress=completeEmailAdd }, protocol: Request.Url.Scheme);
+            //var rejectUrl = Url.Action("Login", "Account", new {  }, protocol: Request.Url.Scheme);
+
+            string body = username+" request to be a/an "+rolename+" ! <a href=\"" + approveUrl + "\">Approve</a>"+" "+"<a href=\"" + rejectUrl + "\">Reject</a> ";
+
+            IdentityMessage request = new IdentityMessage();
+            request.Body =body ;
+
+            request.Subject = "Role Request";
+            request.Destination = "shilowu@cmatcl.com";//should change into Administrator's email address
+
+            EmailService rolerequest = new EmailService();
+            var Result = await rolerequest.SendAsync01(request);
+            if (Result.Succeeded)
+                ViewBag.Message = "Your request has been sent to Adiministrator. Please wait for the result !";
+                return View(model);
+            return Content(Result.Errors.Last().ToString());
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login()//string returnUrl)
         {
-            ViewBag.ReturnUrl = returnUrl;
+            //ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
@@ -65,33 +140,34 @@ namespace Simple02.Controllers
         // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)//how is the second para used ?
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.Authenticate(model);// Can look at the original authenticate method of Id Framwork
+
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
+                                       
+                    return RedirectToAction("Index", "Home", new { role = SignInManager.rolevalue });
+                // This doesn't count login failures towards account lockout
+                // If lockout is requested, increment access failed count which might lock out the user
+                // To enable password failures to trigger account lockout, change to shouldLockout: true
+                //var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "AD authentication fails ! Please use your CMA account !");
                     return View(model);
             }
+           
         }
 
-        //
+        /*
         // GET: /Account/VerifyCode
         [AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
@@ -134,7 +210,7 @@ namespace Simple02.Controllers
             }
         }
 
-        //
+        
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -151,28 +227,37 @@ namespace Simple02.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Set manager role, a manager account and the approval process
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                
+                var result = await UserManager.CreateAsync(user, model.Password);//CreateAsync(TUser, String)...Need to override this method in IndentityConfig.cs
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
 
-                    return RedirectToAction("Index", "Home");
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);//generate the URL
+
+                    var sent= await UserManager.SendEmailAsync01(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    //return Content(sent.Succeeded.ToString());
+                    //return Content("See: "+code.ToString()+"See: "+callbackUrl.ToString());
+
+                    //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return View("EmailSent");
+                    //Can login without confirmation completion !!!
+                    //return RedirectToAction("Index","Home");
+                    //return RedirectToAction("ConfirmEmail", "Account",new {userId=user.Id,code=code});
                 }
-                AddErrors(result);
+                AddErrors(result); 
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
 
-        //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
@@ -181,9 +266,13 @@ namespace Simple02.Controllers
             {
                 return View("Error");
             }
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
+            var result = await UserManager.ConfirmEmailAsync(userId, code);//what does it do ?
+
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
-        }
+        } 
+                   
+        
+
 
         //
         // GET: /Account/ForgotPassword
@@ -271,7 +360,7 @@ namespace Simple02.Controllers
             return View();
         }
 
-        //
+
         // POST: /Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
@@ -385,23 +474,24 @@ namespace Simple02.Controllers
             return View(model);
         }
 
-        //
-        // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
-        {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
-        }
-
-        //
+                //
         // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
         public ActionResult ExternalLoginFailure()
         {
             return View();
+        }       
+                */
+        // POST: /Account/LogOff
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult LogOff()
+        {
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            return RedirectToAction("Login", "Account");
         }
+
+
 
         protected override void Dispose(bool disposing)
         {
@@ -421,10 +511,71 @@ namespace Simple02.Controllers
             }
 
             base.Dispose(disposing);
-        }
+        }// What is it ?
 
+
+        [Route("ManageInfo")]
+        public async Task<IndexViewModel> GetManageInfo(
+   string returnUrl, bool generateState = false)
+        {
+            ApplicationUser user =
+                await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return null;
+            }
+            return new IndexViewModel  //in ManageViewModels,need to change
+            {
+                HasPassword = true,
+                Email = user.UserName,
+                Logins = null, 
+                BrowserRemembered = true,
+                //ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
+            };
+        }
+        /*
+        [Route("ManageInfo")]
+        public async Task<ManageInfoViewModel> GetManageInfo(
+    string returnUrl, bool generateState = false)
+        {
+            ApplicationUser user =
+                await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user == null)
+            {
+                return null;
+            }
+
+            List<UserLoginInfoViewModel> logins = new List<UserLoginInfoViewModel>();
+            foreach (ApplicationUserLogin linkedAccount in user.Logins)
+            {
+                logins.Add(new UserLoginInfoViewModel
+                {
+                    LoginProvider = linkedAccount.LoginProvider,
+                    ProviderKey = linkedAccount.ProviderKey
+                });
+            }
+
+            if (user.PasswordHash != null)
+            {
+                logins.Add(new UserLoginInfoViewModel
+                {
+                    LoginProvider = LocalLoginProvider,
+                    ProviderKey = user.UserName,
+                });
+            }
+
+            return new ManageInfoViewModel
+            {
+                LocalLoginProvider = LocalLoginProvider,
+                Email = user.UserName,
+                Logins = logins,
+                ExternalLoginProviders = GetExternalLogins(returnUrl, generateState)
+            };
+        }
+        */
         #region Helpers
         // Used for XSRF protection when adding external logins
+        //Don't understand yet!
         private const string XsrfKey = "XsrfId";
 
         private IAuthenticationManager AuthenticationManager

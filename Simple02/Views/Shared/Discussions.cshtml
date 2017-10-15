@@ -1,0 +1,91 @@
+﻿@model Simple02.Models.FunctionViewModels.EnquirerIndexViewModel
+@using PagedList.Mvc;
+
+
+<br />
+<div>
+    <ul class="nav nav-tabs">
+        <li class="@ViewBag.liclassA"><a data-toggle="tab" href="#Current1" class="text-content">Current Discussions</a></li>
+        <li class="@ViewBag.liclassB"><a data-toggle="tab" href="#Past1" class="text-content">Past Discussions</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="Current1" class="@ViewBag.tabclassA">
+            <table border="1" cellpadding="10" class="table">
+                <tr>
+                    <th>Question</th>
+                    <th>Host</th>
+                    <th>Begin At</th>
+                    <th>End Before</th>
+                </tr>
+                @for (var i = 0; i < ViewBag.len2; i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(Html.ValueFor(m => m.discussions.Discussions[@i].ToEqry.Title).ToString(), "Join", "Enquirer", routeValues: new { AID = Html.ValueFor(m => m.discussions.Discussions[@i].AID)}, htmlAttributes: null)
+                        </td>
+                        <td>
+                            @Html.ValueFor(m => m.discussions.Discussions[@i].ToEqry.Noter.UserName)
+                        </td>
+                        <td>
+                            @Html.ValueFor(m => m.discussions.Discussions[@i].dsnbgntime)
+                        </td>
+                        <td>
+                            @Html.ValueFor(m => m.discussions.Discussions[@i].ToEqry.ExpRpDate)
+                        </td>
+                    </tr>}
+            </table>
+            Page @Model.discussions.Discussions.PageNumber of @Model.discussions.Discussions.PageCount
+            @Html.PagedListPager(Model.discussions.Discussions, page => Url.Action("Index", new { page }))
+        </div>
+
+        <div id="Past1" class="@ViewBag.tabclassB">
+            <table border="1" cellpadding="10" class="table">
+                <tr>
+                    <th>Question</th>
+                    <th>Host</th>
+                    <th>Begin At</th>
+                    <th>End Before</th>
+                </tr>
+                @for (var i = 0; i < ViewBag.slen2; i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(Html.ValueFor(m => m.discussions.PDsns[@i].ToEqry.Title).ToString(), "Join", "Enquirer", routeValues: new { AID = Html.ValueFor(m => m.discussions.PDsns[@i].AID) }, htmlAttributes: null)
+                        </td>
+                        <td>
+                            @Html.ValueFor(m => m.discussions.PDsns[@i].ToEqry.Noter.UserName)
+                        </td>
+                        <td>
+                            @Html.ValueFor(m => m.discussions.PDsns[@i].dsnbgntime)
+                        </td>
+                        <td>
+                            @Html.ValueFor(m => m.discussions.PDsns[@i].ToEqry.ExpRpDate)
+                        </td>
+                    </tr>
+                }
+            </table>
+            Page @Model.discussions.PDsns.PageNumber of @Model.discussions.PDsns.PageCount
+            @Html.PagedListPager(Model.discussions.PDsns, page => Url.Action("Index", new { page }))
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+

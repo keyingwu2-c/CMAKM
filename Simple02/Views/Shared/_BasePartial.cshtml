@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNet.Identity
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Home", "Index", "Home", new { role = 0 }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Library", "Library", "Home")</li>
+
+                    <li>@Html.ActionLink("Search", "Search", "Home")</li>
+                   
+                    <li>@Html.ActionLink("New Case", "Consult", "Home")</li>
+                    
+                    @if (User.IsInRole("Management"))
+                    {
+                        <li>@Html.ActionLink("Management", "Management", "Management")</li>
+                    }                          
+                </ul> 
+                @Html.Partial("_LoginPartial2")                                           
+            </div>
+            
+        </div>
+    </div>
+
+
+@*
+    <li>@Html.ActionLink("Advanced Search", "Advance", "Home")</li>
+*@

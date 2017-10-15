@@ -1,0 +1,47 @@
+﻿@model Simple02.Models.FunctionViewModels.NotesViewModel   
+@using PagedList.Mvc;
+
+ @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/jquery-1.7.1.min.js")
+        
+}
+<div id="SrhUpdate" class="row">
+    <table cellspacing="8" border="1" class="table">
+        <tr>
+            <th>
+                @Ajax.ActionLink("Question", "NvSearch", new { sortOrder = ViewBag.QSortParm }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "SrhUpdate" })
+            </th>
+            <th>
+                Answer
+            </th>
+            <th>
+                @Ajax.ActionLink("Noter", "NvSearch", new { sortOrder = ViewBag.NSortParm }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "SrhUpdate" })
+            </th>
+            <th>
+                @Ajax.ActionLink("LastUpdate", "NvSearch", new { sortOrder = ViewBag.LDSortParm }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "SrhUpdate" })
+            </th>
+        </tr>
+        @for (var i = 0; i < ViewBag.llen; i++)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(Html.ValueFor(m => m.AllCases[@i].Title).ToString(), "Detail", "Home", routeValues: new { EID = Html.ValueFor(m => m.AllCases[@i].EID) }, htmlAttributes: null)
+                </td>
+                <td>@Html.ValueFor(m => m.AllCases[@i].AnswerToCustomer)</td>
+                <td>@Html.ValueFor(m => m.AllCases[@i].Noter.UserName)</td>
+                <td>@Html.ValueFor(m => m.AllCases[@i].lastUpated)</td>
+            </tr>
+        }
+    </table>
+
+    Page @ViewBag.LPageNumber of @ViewBag.LPageCount
+    @Html.PagedListPager(Model.AllCases, lpage => Url.Action("NvSearch", new { lpage }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "SrhUpdate" }))
+    <p>
+        Add new
+        <a href="@Url.Action("Consult", "Home", null)"><img src="~/Icons/AddAthmt.png" alt="" width="21" height="21" /></a>
+    </p>
+</div>
+    
+
+

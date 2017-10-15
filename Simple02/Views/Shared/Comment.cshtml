@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNet.Identity
+@model Simple02.Models.FunctionViewModels.CaseDetailViewModel
+
+<table class="table jumbotron" id="ComList">
+    <tr>
+
+        <td>
+            @foreach (Post post in Model.eqrytoVw.CaseComments)
+            {
+                <P>@post.Poster.UserName.ToString():</P>
+                            <p class="col-md-offset-1">@post.content.ToString()</p>
+                            <br />
+            }
+        </td>
+    </tr>
+    @if (ViewBag.MailStatus != null)
+    {
+        <tr>
+            <text class="alert-info">@ViewBag.MailStatus</text>
+        </tr>
+    }
+    <tr>
+
+        <td>
+            @using (Ajax.BeginForm("Comment", "Enquirer", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "pclist" }))
+            {
+                @Html.HiddenFor(m => m.eqrytoVw.EID)
+                @Html.TextAreaFor(m => m.newcomment.content, new { @class = "form-control" })
+                <div class="col-md-offset-1">
+                    @Html.CheckBoxFor(m => m.newcomment.Private)
+                    @Html.LabelFor(m => m.newcomment.Private, new { @class = "text-primary", style = "display:inline" }) &nbsp;&nbsp;&nbsp;&nbsp;
+                    @Html.CheckBoxFor(m => m.SendMail)
+                    @Html.LabelFor(m => m.SendMail, new { @class = "text-primary" })
+                </div>
+                    <button type="submit" value="Post" name="btnSubmit" id="testjs" class="btn btn-sm">Post</button>
+                    <input type="reset" value="Clear" name="btnClear" class="btn btn-sm" />
+            }
+        </td>
+    </tr>
+</table>

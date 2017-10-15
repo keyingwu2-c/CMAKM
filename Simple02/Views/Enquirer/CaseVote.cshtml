@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNet.Identity
+@model Simple02.Models.FunctionViewModels.CaseDetailViewModel
+
+Useful :
+            &nbsp;
+@Html.Raw(Ajax.ActionLink("[replacethis]", "CaseVote", "Enquirer", new { eId = Html.ValueFor(m => m.eqrytoVw.EID) }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "CVote" }).ToHtmlString().Replace("[replacethis]", "<img src=\"/Icons/Like.ico\" width=16 height=16/>"))
+@Html.ValueFor(m => m.eqrytoVw.cvoting.forvotes)
+
+@*
+        
+
+*@

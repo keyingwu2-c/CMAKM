@@ -1,0 +1,306 @@
+﻿@using Microsoft.AspNet.Identity
+@model Simple02.Models.FunctionViewModels.CaseDetailViewModel
+@Html.Partial("_BasePartial")
+@{
+    string username = User.Identity.GetUserId();
+}
+
+<div class="row">
+    <ul class="breadcrumb">
+        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+        <li>@Html.ActionLink("Library", "Library", "Home")</li>
+        <li>CaseDetail</li>
+    </ul>
+</div>
+<br />
+    
+
+@Html.HiddenFor(m=> m.eqrytoVw.EID)
+<h3>@Html.ValueFor(m => m.eqrytoVw.Title)</h3>
+
+<div>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#Basics">Basics</a></li>
+        <li><a data-toggle="tab" href="#Comments">Comments</a></li>
+    </ul>
+    <div class="tab-content">
+        <br />
+        <div id="Basics" class="tab-pane fade in active">
+            <h4>@Html.Label("Question", new { })</h4>
+            <div class="jumbotron">
+                <p>
+                    @Html.ValueFor(m => m.eqrytoVw.Qdetail).ToString()
+                </p>
+                <div id="QInfo" class="text-left">
+                    &nbsp;&nbsp;
+                    @Ajax.ActionLink("More >>", "QInfo", "Enquirer", new { PackUp = "Show", EID = Html.ValueFor(m => m.eqrytoVw.EID) },
+                         new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "QInfo" },
+                         new { @class = "btn-link" }
+                         )
+                </div>
+            </div>
+            
+
+            <h4>@Html.Label("Answer", new { })</h4>
+            <div class="jumbotron">
+                <p>
+                    @Html.ValueFor(m => m.eqrytoVw.AnswerToCustomer).ToString()
+                </p>
+                <div id="AInfo" class="text-left">
+                    &nbsp;&nbsp;
+                    @Ajax.ActionLink("More >>", "AInfo", "Enquirer", new { PackUp = "Show", EID = Html.ValueFor(m => m.eqrytoVw.EID) },
+                         new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "AInfo" },
+                         new { @class = "btn-link" }
+                         )
+                </div>
+            </div>
+        </div>      
+        <div id="Comments" class="tab-pane fade">
+            <div id="pclist">
+                <table class="table jumbotron" id="ComList">
+                    <tr>
+
+                        <td>
+                            @foreach (Post post in Model.PubComments)
+            {
+                                <P>@post.Poster.UserName.ToString():</P>
+                                <p class="col-md-offset-1">@post.content.ToString()</p>
+                                <br />
+                            }
+                            @if (username == Model.eqrytoVw.Noter.Id)
+                            {
+                                foreach (Post post in Model.PrvComments)
+                                {
+                                    <P class="text-private">@post.Poster.UserName.ToString():</P>
+                                    <p class="col-md-offset-1 text-private">@post.content.ToString()</p>
+                                    <br />
+                                }
+                            }
+                        </td>
+                    </tr>
+                    @if (ViewBag.MailStatus != null)
+                    {
+                        <tr>
+                            <text class="alert-info">@ViewBag.MailStatus</text>
+                        </tr>
+                    }
+                    <tr>
+
+                        <td>
+                            @using (Ajax.BeginForm("Comment", "Enquirer",new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "pclist" }))
+                            {
+                                @Html.HiddenFor(m => m.eqrytoVw.EID)
+                                @Html.TextAreaFor(m => m.newcomment.content, new { @class = "form-control" })
+                                <div class="col-md-offset-1">
+                                    @Html.CheckBoxFor(m => m.newcomment.Private)
+                                    @Html.LabelFor(m => m.newcomment.Private, new { @class = "text-primary", style = "display:inline" }) &nbsp;&nbsp;&nbsp;&nbsp;
+                                    @Html.CheckBoxFor(m => m.SendMail)
+                                    @Html.LabelFor(m => m.SendMail, new { @class = "text-primary" })
+                                </div>
+                                <button type="submit" value="Post" name="btnSubmit" id="testjs" class="btn btn-sm">Post</button>
+                                <input type="reset" value="Clear" name="btnClear" class="btn btn-sm" />
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+   
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <p>PageViews @Html.ValueFor(m => m.eqrytoVw.pageview)</p>
+    </div>
+    <div class="col-md-4 text-center" id="CVote">
+        Useful :
+        &nbsp;
+        @Html.Raw(Ajax.ActionLink("[replacethis]", "CaseVote", "Enquirer", new { eId = Html.ValueFor(m => m.eqrytoVw.EID) }, new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "CVote" }).ToHtmlString().Replace("[replacethis]", "<img src=\"/Icons/Like.ico\" width=16 height=16/>"))             
+        @Html.ValueFor(m => m.eqrytoVw.cvoting.forvotes)
+    </div>
+    <div class="col-md-4 text-right">
+        @if (username == Model.eqrytoVw.Noter.Id)
+        {
+            <p>
+                Edit :&nbsp;
+                @Html.Raw(Html.ActionLink("[replacethis]", "Edit", "Enquirer", routeValues: new { EID = Html.ValueFor(m => m.eqrytoVw.EID) }, htmlAttributes: null).ToHtmlString().Replace("[replacethis]", "<img src=\"/Icons/Edit.png\" width=22 height=22/>"))
+                
+            </p>
+        }
+        else
+        {
+            <p>Noted by @Html.ValueFor(m => m.eqrytoVw.Noter.UserName)</p>
+        }
+    </div>
+</div>
+
+
+@section scripts{
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
+    <script type="text/javascript">
+        function OnSuccess(response) {
+            $("#QInfo").html(response);
+        }
+        function OnFailure(response) {
+            alert("Whoops! That didn't go so well did it?");
+        }
+
+        function OnSuccess(response) {
+            $("#AInfo").html(response);
+        }
+        function OnFailure(response) {
+            alert("Whoops! That didn't go so well did it?");
+        }
+
+        $(document).ready(function () {
+            $("#testjs").on("click", function () {
+                $("#pclist").html(response);
+            });
+
+            $("#cvjs").on("click", function () {
+                $("#CVote").html(response);
+            });
+        });
+
+        $(document).ready(function () {
+            
+        });
+
+        var MailRqstRspnds = function () {
+            bootbox.prompt({
+                title: "Request to contact the answerer",
+                inputType: 'select',
+                inputOptions: [
+                    {
+                        text: 'I want to contact the answerer because ...',
+                        value: '',
+                    },
+                    {
+                        text: 'I have some doubts with the answer',
+                        value: '1',
+                    },
+                    {
+                        text: 'I have some complementations to the answer',
+                        value: '2',
+                    },
+                    {
+                        text: 'I have further questions on the answer',
+                        value: '3',
+                    }
+                ],
+                callback: function (result) {
+                    console.log(result);
+                }
+            });
+        }
+
+        var DJRqstRspnds = function () {
+            bootbox.prompt({
+                title: "Request to join the discussion",
+                inputType: 'select',
+                inputOptions: [
+                    {
+                        text: 'I want to join the discussion because ...',
+                        value: '',
+                    },
+                    {
+                        text: 'I have some doubts with the answer',
+                        value: '1',
+                    },
+                    {
+                        text: 'I have some complementations to the answer',
+                        value: '2',
+                    },
+                    {
+                        text: 'I am interested in the techniques',
+                        value: '3',
+                    }
+                ],
+                callback: function (result) {
+                    console.log(result);
+                }
+            });
+        }
+
+        $('body').on('click', '#MRqst', MailRqstRspnds);
+
+        $('body').on('click', '#DJRqst', DJRqstRspnds);
+
+    </script>
+
+
+}
+
+
+
+    
+
+
+    @*
+    $("#DJRqst").on("click", function () {
+                   bootbox.prompt({
+                       title: "Request to join the discussion",
+                       inputType: 'select',
+                       inputOptions: [
+                           {
+                               text: 'I want to join the discussion because ...',
+                               value: '',
+                           },
+                           {
+                               text: 'I have some doubts with the answer',
+                               value: '1',
+                           },
+                           {
+                               text: 'I have some complementations to the answer',
+                               value: '2',
+                           },
+                           {
+                               text: 'I am interested in the techniques',
+                               value: '3',
+                           }
+                       ],
+                       callback: function (result) {
+                           console.log(result);
+                       }
+                   });
+               });
+
+               $("#MRqst").on("click", function () {
+                   bootbox.prompt({
+                       title: "Request to contact the answerer",
+                       inputType: 'select',
+                       inputOptions: [
+                           {
+                               text: 'I want to contact the answerer because ...',
+                               value: '',
+                           },
+                           {
+                               text: 'I have some doubts with the answer',
+                               value: '1',
+                           },
+                           {
+                               text: 'I have some complementations to the answer',
+                               value: '2',
+                           },
+                           {
+                               text: 'I have further questions on the answer',
+                               value: '3',
+                           }
+                       ],
+                       callback: function (result) {
+                           console.log(result);
+                       }
+                   });
+               });
+
+    *@
+
+
+
+
+
+
+
+

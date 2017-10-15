@@ -1,0 +1,30 @@
+﻿@model Simple02.Models.ConsultViewModel   
+
+
+
+
+
+   
+    <div class="col-md-10">
+        @Html.Label("Expected Replying Date", new {})
+        @Html.TextBoxFor(m => m.techEqry.ExpRpDate, new { @class = "form-control", @readonly = "readonly", Value = DateTime.Today.AddDays(2).ToShortDateString() })
+    </div>
+<br />
+<div class="col-md-10">
+    @Ajax.ActionLink("Add Answer", "RecordAnswer", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "ShowPartial" })
+    &nbsp;|&nbsp;
+    @Ajax.ActionLink("Consult Experts", "CallExperts", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "ShowPartial" })
+    &nbsp;|&nbsp;
+    @Ajax.ActionLink("Consult TechKnowTeam", "ToTechKnowTeam", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "ShowPartial" })
+</div>
+<div class="col-md-offset-0 col-md-10">
+    <p>&nbsp;</p>
+    <form>
+        <input type="submit" value="Consult TechKnowTeam" name="btnSubmit" formaction="Consult" formmethod="post" class="btn btn-default" />
+        <input type="reset" value="Clear" name="btnClear" class="btn btn-default" />
+    </form>
+</div>
+    
+  
+
+

@@ -12,6 +12,9 @@ namespace Simple02
     {
         protected void Application_Start()
         {
+            System.Data.Entity.Database.SetInitializer<Models.ApplicationDbContext>(null);
+            //System.Data.Entity.Database.SetInitializer(new System.Data.Entity.CreateDatabaseIfNotExists<Models.ApplicationDbContext>());
+            //System.Data.Entity.Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<Models.NewDatabase>());
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

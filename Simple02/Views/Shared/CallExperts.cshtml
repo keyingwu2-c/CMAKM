@@ -1,0 +1,53 @@
+﻿@model Simple02.Models.ConsultViewModel   
+
+
+
+
+@{ 
+    var getusers = new ApplicationDbContext();
+    var pchoices = getusers.Users.Select(c => new { uid = c.Id, user = c.UserName }).ToList();
+    MultiSelectList pchcs = new MultiSelectList(pchoices, "uid", "user");
+}
+    <div class="col-md-10">
+        @Html.LabelFor(m => m.CallExpert)<text class="text-danger">*</text>
+        <div id="SltdEpts">
+            @Html.ListBoxFor(m => m.CallExpert, pchcs, new { @class = "form-control", rows = "2", multiple = "multiple", required = "required" })
+        </div>           
+    </div>
+
+        
+        <div class="col-md-10">
+            @Html.Label("Expected Replying Date", new {  })
+            @Html.TextBoxFor(m => m.techEqry.ExpRpDate, new { @class = "form-control", @readonly = "readonly", Value = DateTime.Today.AddDays(2).ToShortDateString() })
+        </div>
+        <p>&nbsp;</p>
+  
+    <br />
+    <div class="col-md-10">
+        @Ajax.ActionLink("Add Answer", "RecordAnswer", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "ShowPartial" })
+        &nbsp;|&nbsp;
+        @Ajax.ActionLink("Consult Experts", "CallExperts", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "ShowPartial" })
+        &nbsp;|&nbsp;
+        @Ajax.ActionLink("Consult TechKnowTeam", "ToTechKnowTeam", new AjaxOptions() { InsertionMode = InsertionMode.Replace, UpdateTargetId = "ShowPartial" })
+    </div>
+    <div class="col-md-offset-0 col-md-10">
+        <p>&nbsp;</p>
+        <form>
+            <input type="submit" value="Consult Experts" name="btnSubmit" formaction="Consult" formmethod="post" class="btn btn-default" />
+            <input type="reset" value="Clear" name="btnClear" class="btn btn-default" />
+        </form>
+    </div>
+    
+@section scripts{
+  
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.js")
+
+ 
+
+}    
+
+
+@*
+    @Html.Label("Select TechKnowTeam")
+    @Html.CheckBoxFor(m => m.SltTKT, new {  id = "SltTKT", data_url = Url.Action("Search", "Home") })
+*@
